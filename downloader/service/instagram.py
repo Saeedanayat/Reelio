@@ -73,9 +73,7 @@ def playwright_worker():
             pag_goto = time.perf_counter()
             page.on("request", lambda request: log_request(request, urls))
             page.goto(url, wait_until="commit")
-            page.wait_for_timeout(5000)
             print(f"Page goto: {time.perf_counter() - pag_goto:.2f}s")
-
             progress[request_id]["status"]="page_goto"
             progress[request_id]["percent"]=20
             start_wait=time.perf_counter()
@@ -158,6 +156,7 @@ def get_video(url):
                                  # FUNCTION
                    # filter vedio and audio url from urls 
 def log_request(response , urls,):
+
     filter_start = time.perf_counter()
     data=response.url
 

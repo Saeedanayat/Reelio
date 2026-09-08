@@ -19,8 +19,10 @@ progress={}
 def playwright_worker():
     print("playwright working is start....")
     with sync_playwright()as p:
-        broswer=p.chromium.launch(headless=True)
-
+        context=p.chromium.launch_persistent_context(
+        user_data_dir="playwright_profile",
+        headless=True
+       )
         print("playwright broswer is lanuch and wait your task")
 
         while True:
@@ -53,13 +55,14 @@ def playwright_worker():
             audio_path = os.path.join(folder, "audio.mp4")
             output_path = os.path.join(folder, "output.mp4")
             bros_page=time.perf_counter()
-            page=broswer.new_page()
+            page=context.new_page()
+            print("USER AGENT:", page.evaluate("navigator.userAgent"))
             page.route(
                  "**/*",
                 lambda route: (
                      route.abort()
                      if(
-                            route.request.resource_type in ["image", "stylesheet", "font"]
+                            route.request.resource_type in [ "stylesheet", "font","image"]
                             or "api/graphql" in route.request.url
                             # or "/ajax/bz" in route.request.url
                      )
@@ -67,11 +70,10 @@ def playwright_worker():
                    )
                 )            
             print(f"New page: {time.perf_counter() - bros_page:.2f}s")
-            pag_goto=time.perf_counter()
-            # page.on("response",lambda response:log_request(response,urls,pag_goto))
             pag_goto = time.perf_counter()
             page.on("request", lambda request: log_request(request, urls))
-            page.goto(url,wait_until="commit")
+            page.goto(url, wait_until="commit")
+            page.wait_for_timeout(5000)
             print(f"Page goto: {time.perf_counter() - pag_goto:.2f}s")
 
             progress[request_id]["status"]="page_goto"
@@ -153,12 +155,12 @@ def get_video(url):
     request_id=uuid.uuid4().hex
     tasks.put((URL,request_id))
     return request_id
-
-
+                                 # FUNCTION
+                   # filter vedio and audio url from urls 
 def log_request(response , urls,):
     filter_start = time.perf_counter()
-    # print("CALLED FROM:", type(response).__name__)
     data=response.url
+
     if ".mp4" not in data:
        return
     params=parse_qs(urlparse(data).query)

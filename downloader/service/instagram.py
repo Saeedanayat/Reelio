@@ -20,7 +20,7 @@ def playwright_worker():
     print("playwright working is start....")
     with sync_playwright()as p:
         context=p.chromium.launch_persistent_context(
-        user_data_dir="playwright_profile",
+        user_data_dir="/app/playwright_profile",
         headless=True
        )
         print("playwright broswer is lanuch and wait your task")

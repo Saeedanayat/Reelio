@@ -177,17 +177,27 @@ def log_request(response , urls,):
     tag=efg.get("vencode_tag","")
 
     if "audio" in tag.lower()and urls["audio"] is None:
+        print(
+        f"🎵 AUDIO SELECTED | "
+        f"ASSET: {efg.get('xpv_asset_id')} | "
+        f"DURATION: {efg.get('duration_s')} | "
+        f"BITRATE: {efg.get('bitrate')}"
+        )
         url=data.split("&bytestart=")[0]
         urls["audio"]=url
-        # download(urls["audio"],audio_path)
         print(urls["audio"])
         print("this audio url") 
         print(f"🎵 Audio filter: {time.perf_counter() - filter_start:.6f}s")
 
     elif"dash_baseline" in tag.lower() and urls["video"] is None:
+        print(
+        f"🎥 VIDEO SELECTED | "
+        f"ASSET: {efg.get('xpv_asset_id')} | "
+        f"DURATION: {efg.get('duration_s')} | "
+        f"BITRATE: {efg.get('bitrate')}"
+        )
         clean_url = data.split("&bytestart=")[0]
         urls["video"]= clean_url
-        # download(urls["video"],vedio_path)
         print(urls["video"])
         print("this vedio url") 
         print(f"🎥 Video filter: {time.perf_counter() - filter_start:.6f}s")

@@ -180,6 +180,11 @@ def log_request(response , urls,state):
         print(f"\n❌ Decode Error: {e}")
         return 
     tag=efg.get("vencode_tag","")
+    print(
+        "| ASSET:", efg.get("xpv_asset_id"),
+        "| DURATION:", efg.get("duration_s"),
+    )
+
 
     if "audio" in tag.lower()and urls["audio"] is None:
         asset=efg.get("xpv_asset_id")

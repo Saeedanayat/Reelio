@@ -16,6 +16,10 @@ import re
 tasks=queue.Queue()
 # results=queue.Queue()
 progress={}
+state = {
+    "target_asset": None,
+    "audio_candidates": {}
+}
 def playwright_worker():
     print("playwright working is start....")
     with sync_playwright()as p:
@@ -71,7 +75,7 @@ def playwright_worker():
                 )            
             print(f"New page: {time.perf_counter() - bros_page:.2f}s")
             pag_goto = time.perf_counter()
-            page.on("request", lambda request: log_request(request, urls))
+            page.on("request", lambda request: log_request(request, urls,state))
             page.goto(url, wait_until="commit")
             print(f"Page goto: {time.perf_counter() - pag_goto:.2f}s")
             progress[request_id]["status"]="page_goto"
@@ -155,7 +159,7 @@ def get_video(url):
     return request_id
                                  # FUNCTION
                    # filter vedio and audio url from urls 
-def log_request(response , urls,):
+def log_request(response , urls,state):
 
     filter_start = time.perf_counter()
     data=response.url
@@ -177,19 +181,27 @@ def log_request(response , urls,):
     tag=efg.get("vencode_tag","")
 
     if "audio" in tag.lower()and urls["audio"] is None:
+        asset=efg.get("xpv_asset_id")
+        state["audio_candidates"][asset] = data
+        url=data.split("&bytestart=")[0]
+
+        if state["target_asset"] is not None and state["target_asset"] != asset:
+            return      
         print(
         f"🎵 AUDIO SELECTED | "
         f"ASSET: {efg.get('xpv_asset_id')} | "
         f"DURATION: {efg.get('duration_s')} | "
         f"BITRATE: {efg.get('bitrate')}"
         )
-        url=data.split("&bytestart=")[0]
-        urls["audio"]=url
+        urls["audio"]=url 
         print(urls["audio"])
         print("this audio url") 
         print(f"🎵 Audio filter: {time.perf_counter() - filter_start:.6f}s")
 
     elif"dash_baseline" in tag.lower() and urls["video"] is None:
+        asset=efg.get("xpv_asset_id")
+        state["target_asset"]=asset
+
         print(
         f"🎥 VIDEO SELECTED | "
         f"ASSET: {efg.get('xpv_asset_id')} | "
@@ -199,7 +211,9 @@ def log_request(response , urls,):
         clean_url = data.split("&bytestart=")[0]
         urls["video"]= clean_url
         print(urls["video"])
-        print("this vedio url") 
+        print("this vedio url")
+        if urls["audio"] is None and asset in state["audio_candidates"]:
+           urls["audio"] = state["audio_candidates"][asset]
         print(f"🎥 Video filter: {time.perf_counter() - filter_start:.6f}s")
         
 def is_instagram_reel(url):

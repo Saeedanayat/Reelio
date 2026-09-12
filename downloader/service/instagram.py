@@ -16,10 +16,6 @@ import re
 tasks=queue.Queue()
 # results=queue.Queue()
 progress={}
-state = {
-    "target_asset": None,
-    "audio_candidates": {}
-}
 def playwright_worker():
     print("playwright working is start....")
     with sync_playwright()as p:
@@ -30,6 +26,11 @@ def playwright_worker():
         print("playwright broswer is lanuch and wait your task")
 
         while True:
+            state = {
+              "target_asset": None,
+               "audio_candidates": {}
+            }
+
             task=tasks.get()
             if task is None:
                 break

@@ -181,11 +181,11 @@ def log_request(response , urls,state):
         return 
     tag=efg.get("vencode_tag","")
     print(
-        "| ASSET:", efg.get("xpv_asset_id"),
-        "| DURATION:", efg.get("duration_s"),
-    )
-
-
+    f"| TAG: {efg.get('vencode_tag')} "
+    f"| ASSET: {efg.get('xpv_asset_id')} "
+    f"| DURATION: {efg.get('duration_s')} "
+    f"| BITRATE: {efg.get('bitrate')}"
+)
     if "audio" in tag.lower()and urls["audio"] is None:
         asset=efg.get("xpv_asset_id")
         state["audio_candidates"][asset] = data

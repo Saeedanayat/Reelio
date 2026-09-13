@@ -13,6 +13,22 @@ faqItems.forEach(item => {
 
     });
 });
+const input = document.querySelector("input");
+const resset = document.querySelector(".reset");
+
+input.addEventListener("focus", () => {
+    if (input.value.trim() !== "") {
+        resset.classList.add("show");
+    }
+    setTimeout(()=>{
+    resset.classList.remove("show");
+    },2000)
+});
+
+resset.addEventListener("click", () => {
+    input.value = "";
+    resset.classList.remove("show");
+});
 // button click function 
 const link=document.querySelector(".download")
 const urls=document.querySelector("input")

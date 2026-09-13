@@ -19,7 +19,8 @@ progress={}
 def playwright_worker():
     print("playwright working is start....")
     with sync_playwright()as p:
-        mobile = p.devices["iPhone 13"]
+        mobile = p.devices["iPhone 13"].copy()
+        mobile.pop("default_browser_type", None)
 
         context=p.chromium.launch_persistent_context(
         user_data_dir="/app/playwright_profile",

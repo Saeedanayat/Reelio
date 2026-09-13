@@ -174,8 +174,10 @@ def log_request(response , urls,state):
     filter_start = time.perf_counter()
     data=response.url
 
+
     if ".mp4" not in data:
        return
+    print(data)
     params=parse_qs(urlparse(data).query)
     if "efg" not in params:
        print("\n efg not found")

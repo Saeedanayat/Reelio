@@ -71,18 +71,18 @@ def playwright_worker():
             print("TOUCH:", page.evaluate("navigator.maxTouchPoints"))
             print("WIDTH:", page.evaluate("window.innerWidth"))          
 
-            page.route(
-                 "**/*",
-                lambda route: (
-                     route.abort()
-                     if(
-                            route.request.resource_type in [ "stylesheet", "font","image"]
-                            # or "api/graphql" in route.request.url
-                            # or "/ajax/bz" in route.request.url
-                     )
-                     else route.continue_()
-                   )
-                )  
+            # page.route(
+            #      "**/*",
+            #     lambda route: (
+            #          route.abort()
+            #          if(
+            #                 route.request.resource_type in [ "stylesheet", "font","image"]
+            #                 # or "api/graphql" in route.request.url
+            #                 # or "/ajax/bz" in route.request.url
+            #          )
+            #          else route.continue_()
+            #        )
+            #     )  
             print(f"New page: {time.perf_counter() - bros_page:.2f}s")
             pag_goto = time.perf_counter()
             page.on("request", lambda request: log_request(request, urls,state))

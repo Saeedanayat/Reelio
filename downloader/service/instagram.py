@@ -62,18 +62,18 @@ def playwright_worker():
             bros_page=time.perf_counter()
             page=context.new_page()
             print("USER AGENT:", page.evaluate("navigator.userAgent"))
-            page.route(
-                 "**/*",
-                lambda route: (
-                     route.abort()
-                     if(
-                            route.request.resource_type in [ "stylesheet", "font","image"]
-                            # or "api/graphql" in route.request.url
-                            # or "/ajax/bz" in route.request.url
-                     )
-                     else route.continue_()
-                   )
-                )            
+            # page.route(
+            #      "**/*",
+            #     lambda route: (
+            #          route.abort()
+            #          if(
+            #                 route.request.resource_type in [ "stylesheet", "font","image"]
+            #                 # or "api/graphql" in route.request.url
+            #                 # or "/ajax/bz" in route.request.url
+            #          )
+            #          else route.continue_()
+            #        )
+            #     )            
             print(f"New page: {time.perf_counter() - bros_page:.2f}s")
             pag_goto = time.perf_counter()
             page.on("request", lambda request: log_request(request, urls,state))

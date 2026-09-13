@@ -68,7 +68,7 @@ def playwright_worker():
                      route.abort()
                      if(
                             route.request.resource_type in [ "stylesheet", "font","image"]
-                            or "api/graphql" in route.request.url
+                            # or "api/graphql" in route.request.url
                             # or "/ajax/bz" in route.request.url
                      )
                      else route.continue_()

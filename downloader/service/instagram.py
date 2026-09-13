@@ -19,9 +19,12 @@ progress={}
 def playwright_worker():
     print("playwright working is start....")
     with sync_playwright()as p:
+        mobile = p.devices["iPhone 13"]
+
         context=p.chromium.launch_persistent_context(
         user_data_dir="/app/playwright_profile",
-        headless=True
+        headless=True,
+        **mobile
        )
         print("playwright broswer is lanuch and wait your task")
 
@@ -62,18 +65,23 @@ def playwright_worker():
             bros_page=time.perf_counter()
             page=context.new_page()
             print("USER AGENT:", page.evaluate("navigator.userAgent"))
+            print("LANG:", page.evaluate("navigator.language"))
+            print("PLATFORM:", page.evaluate("navigator.platform"))
+            print("TOUCH:", page.evaluate("navigator.maxTouchPoints"))
+            print("WIDTH:", page.evaluate("window.innerWidth"))          
+
             page.route(
                  "**/*",
                 lambda route: (
                      route.abort()
                      if(
                             route.request.resource_type in [ "stylesheet", "font","image"]
-                            or "api/graphql" in route.request.url
+                            # or "api/graphql" in route.request.url
                             # or "/ajax/bz" in route.request.url
                      )
                      else route.continue_()
                    )
-                )            
+                )  
             print(f"New page: {time.perf_counter() - bros_page:.2f}s")
             pag_goto = time.perf_counter()
             page.on("request", lambda request: log_request(request, urls,state))

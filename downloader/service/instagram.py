@@ -62,22 +62,21 @@ def playwright_worker():
             bros_page=time.perf_counter()
             page=context.new_page()
             print("USER AGENT:", page.evaluate("navigator.userAgent"))
-            # page.route(
-            #      "**/*",
-            #     lambda route: (
-            #          route.abort()
-            #          if(
-            #                 route.request.resource_type in [ "stylesheet", "font","image"]
-            #                 # or "api/graphql" in route.request.url
-            #                 # or "/ajax/bz" in route.request.url
-            #          )
-            #          else route.continue_()
-            #        )
-            #     )            
+            page.route(
+                 "**/*",
+                lambda route: (
+                     route.abort()
+                     if(
+                            route.request.resource_type in [ "stylesheet", "font","image"]
+                            or "api/graphql" in route.request.url
+                            # or "/ajax/bz" in route.request.url
+                     )
+                     else route.continue_()
+                   )
+                )            
             print(f"New page: {time.perf_counter() - bros_page:.2f}s")
             pag_goto = time.perf_counter()
             page.on("request", lambda request: log_request(request, urls,state))
-            page.on("request", debug_request)
             page.goto(url, wait_until="commit")
             print(f"Page goto: {time.perf_counter() - pag_goto:.2f}s")
             progress[request_id]["status"]="page_goto"
@@ -240,15 +239,3 @@ def is_instagram_reel(url):
 
     except Exception:
         return False
-def debug_request(request):
-    url = request.url
-
-    if "scontent" in url and (
-        request.resource_type in ["media", "xhr", "fetch"]
-        or ".mp4" in url
-    ):
-        print(
-            f"➡️ REQUEST | "
-            f"TYPE={request.resource_type} | "
-            f"URL={url[:300]}"
-        )

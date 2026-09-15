@@ -13,6 +13,12 @@ faqItems.forEach(item => {
 
     });
 });
+document.body.addEventListener("click", (e) => {
+    if (e.target.closest(".download"))
+         return;
+    const nab=document.querySelector(".nab-bar")
+    nab.classList.remove("hidden");
+});
 const input = document.querySelector("input");
 const resset = document.querySelector(".reset");
 
@@ -42,8 +48,11 @@ link.addEventListener("click",()=>{
 }  
 const move=document.querySelector(".r-time")
 move.scrollIntoView({
-    behavior:"smooth"
+    behavior:"smooth",
+    block:"center"
     })
+     const nab=document.querySelector(".nab-bar")
+     nab.classList.add("hidden")
 
   fetchurl(url)
   console.log(url)
@@ -117,8 +126,11 @@ async function checkVideoStatus(uid) {
         const ready=document.querySelector(".v-download")
         setTimeout(()=>{
         ready.scrollIntoView({
-          behavior:"smooth"
+          behavior:"smooth",
+          block:"center"
         })
+         const nab=document.querySelector(".nab-bar")
+         nab.classList.add("hidden")
         },2000)
     if (data.status != "ready") {
 

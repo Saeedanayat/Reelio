@@ -237,7 +237,7 @@ html, body {
         gap: 4px;
         box-shadow:0 0 0 1px rgba(139,92,246,.08), 0 8px 40px rgba(99,102,241,.18), inset 0 1px 0 rgba(255,255,255,.06);
         backdrop-filter:blur(20px);
-        animation: zoom 1.2s ease-in-out infinite;
+        /* animation: zoom 1.2s ease-in-out infinite; */
 
     }
 .reset {

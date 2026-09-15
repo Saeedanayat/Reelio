@@ -187,12 +187,12 @@ def log_request(response , urls,state):
         print(f"\n❌ Decode Error: {e}")
         return 
     tag=efg.get("vencode_tag","")
-    print(
-    f"| TAG: {efg.get('vencode_tag')} "
-    f"| ASSET: {efg.get('xpv_asset_id')} "
-    f"| DURATION: {efg.get('duration_s')} "
-    f"| BITRATE: {efg.get('bitrate')}"
-)
+#     print(
+#     f"| TAG: {efg.get('vencode_tag')} "
+#     f"| ASSET: {efg.get('xpv_asset_id')} "
+#     f"| DURATION: {efg.get('duration_s')} "
+#     f"| BITRATE: {efg.get('bitrate')}"
+# )
     if "audio" in tag.lower()and urls["audio"] is None:
         asset=efg.get("xpv_asset_id")
         state["audio_candidates"][asset] = data
